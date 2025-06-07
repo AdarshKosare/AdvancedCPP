@@ -1,0 +1,11 @@
+3. Observer Pattern
+Purpose:
+- Establish a one-to-many relationship between objects, where one object (subject) notifies multiple dependent objects (observers) of any state changes.
+
+How it works:
+- Observers register themselves with the subject.
+- When the subject's state changes, it notifies all registered observers.
+
+Real-Life Examples:
+- Weather Monitoring System: Sensors (subject) send updates to multiple displays (observers) when weather conditions change.
+- Stock Market: A stock (subject) notifies all investors (observers) whenever its price changes.
