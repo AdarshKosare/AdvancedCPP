@@ -1,4 +1,5 @@
-##Factory
+## Factory
+
 The Factory Design Pattern is a creational design pattern that provides an interface or method for creating objects in a superclass but allows subclasses to alter the type of objects that will be created. This pattern is used when the exact type of object to be created is determined at runtime.
 
 Use Case of Factory Design Pattern
