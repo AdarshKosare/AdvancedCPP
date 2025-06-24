@@ -1,4 +1,4 @@
-
+9
 
 ---
 
@@ -294,6 +294,3 @@ memset(address.sin_zero, 0, sizeof(address.sin_zero));
 
 ---
 
-You can copy and add this section after the "Socket Properties" section (before the Example section) in your `SocketProgramming.md` for a more comprehensive resource. Let me know if you want this inserted directly into your current file content!
-
-You can copy and save this content as `SocketProgramming.md` in your repository. Let me know if you want a more advanced example or details on UDP sockets!
