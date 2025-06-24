@@ -207,4 +207,93 @@ int main() {
 
 ---
 
+## Detailed Explanation: sockaddr_in, sockaddr, and INADDR_* Terms
+
+### sockaddr_in
+
+`sockaddr_in` is a structure used for handling IPv4 addresses in socket programming. It is defined in `<netinet/in.h>` and is used to specify an endpoint address for bind, connect, etc.
+
+```cpp
+struct sockaddr_in {
+    sa_family_t    sin_family; // Address family (AF_INET for IPv4)
+    in_port_t      sin_port;   // Port number (network byte order)
+    struct in_addr sin_addr;   // IP address
+    char           sin_zero[8];// Padding (unused)
+};
+```
+- **sin_family**: Always set to `AF_INET` for IPv4.
+- **sin_port**: The port number (must be in network byte order, use `htons()`).
+- **sin_addr**: Structure containing the IP address (in network byte order).
+- **sin_zero**: Padding for alignment (should be set to zero).
+
+### sockaddr
+
+`sockaddr` is a generic structure used by system calls like `bind()`, `connect()`, and `accept()`. It is less specific than `sockaddr_in` and is used for type compatibility.
+
+```cpp
+struct sockaddr {
+    sa_family_t sa_family;    // Address family
+    char        sa_data[14];  // Protocol-specific address information
+};
+```
+When calling functions like `bind()` or `connect()`, you cast a `sockaddr_in*` to a `sockaddr*`:
+```cpp
+bind(sockfd, (struct sockaddr*)&address, sizeof(address));
+```
+
+### INADDR_ANY and Other INADDR_* Constants
+
+These macros are defined in `<netinet/in.h>` and are used for special IPv4 addresses in socket programming:
+
+- **INADDR_ANY**:  
+  Value: `0.0.0.0`  
+  Use: Bind the socket to all available interfaces (any local IP).  
+  Example: `address.sin_addr.s_addr = INADDR_ANY;`
+
+- **INADDR_LOOPBACK**:  
+  Value: `127.0.0.1`  
+  Use: Loopback address for local machine (localhost).  
+  Example: `address.sin_addr.s_addr = htonl(INADDR_LOOPBACK);`
+
+- **INADDR_BROADCAST**:  
+  Value: `255.255.255.255`  
+  Use: Used to send packets to all hosts on the network (broadcast).  
+  Example: `address.sin_addr.s_addr = htonl(INADDR_BROADCAST);`
+
+- **INADDR_NONE**:  
+  Value: `-1`  
+  Use: Indicates an invalid address, often returned by functions like `inet_addr()` on error.
+
+#### Example Usage Table
+
+| Macro               | Typical Usage                                      | Value             |
+|---------------------|----------------------------------------------------|-------------------|
+| `INADDR_ANY`        | Bind to all interfaces                             | `0.0.0.0`         |
+| `INADDR_LOOPBACK`   | Loopback interface (localhost)                     | `127.0.0.1`       |
+| `INADDR_BROADCAST`  | Broadcast to all hosts                             | `255.255.255.255` |
+| `INADDR_NONE`       | Error/invalid address indication                   | `-1`              |
+
+#### Typical sockaddr_in Initialization
+
+```cpp
+sockaddr_in address;
+address.sin_family = AF_INET;
+address.sin_port = htons(8080);
+// Bind to all available interfaces
+address.sin_addr.s_addr = INADDR_ANY;
+// Or bind to localhost only
+address.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+// Or set a specific IP
+inet_pton(AF_INET, "192.168.1.10", &address.sin_addr);
+memset(address.sin_zero, 0, sizeof(address.sin_zero));
+```
+
+---
+
+**Tip:** Always use `htonl()` or `htons()` to convert values to network byte order when assigning to `sin_addr.s_addr` or `sin_port` respectively, except when using `inet_pton()` or `inet_addr()` which already return the address in the correct format.
+
+---
+
+You can copy and add this section after the "Socket Properties" section (before the Example section) in your `SocketProgramming.md` for a more comprehensive resource. Let me know if you want this inserted directly into your current file content!
+
 You can copy and save this content as `SocketProgramming.md` in your repository. Let me know if you want a more advanced example or details on UDP sockets!
